@@ -1,0 +1,12 @@
+LATEST FIXES
+============
+1. Header logo:
+   - KOSOVË is now baked into one transparent header logo image instead of being a separate text element.
+   - This removes the spacing/wrapping/glitch visible under the script wordmark.
+
+2. Return to shop:
+   - The shop remembers the visitor's scroll position, loaded product count, filters, sort, search and price fields for the current browsing session.
+   - Clicking "Kthehu në dyqan" from a product returns to the same shop position instead of the top.
+   - Browser Back from a product to the shop also requests restoration.
+
+TypeScript check: PASSED.

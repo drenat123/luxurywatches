@@ -1,0 +1,10 @@
+LOGO UPDATE
+
+- Browser favicon now uses the supplied yellow LuxuryWatches logo.
+- Social sharing image (WhatsApp/Facebook/etc.) no longer points to Bolt.new; it uses the supplied logo.
+- Header logo now uses a transparent black LuxuryWatches wordmark with KOSOVE below it.
+- Mobile header sizing was kept compact.
+
+IMPORTANT:
+The old dist/ and deploy-to-hostinger files were built before this logo update.
+Run BUILD_AND_PACKAGE_HOSTINGER.bat to create a fresh HOSTINGER_UPLOAD.zip before uploading to Hostinger.

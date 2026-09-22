@@ -1,0 +1,670 @@
+{
+    "name": "Integration Webhooks, Resend",
+    "flow": [
+        {
+            "id": 1,
+            "module": "gateway:CustomWebHook",
+            "version": 1,
+            "parameters": {
+                "hook": 3749584,
+                "maxResults": 1
+            },
+            "mapper": {},
+            "metadata": {
+                "designer": {
+                    "x": 0,
+                    "y": 0
+                },
+                "setupValidation": {
+                    "result": {
+                        "valid": true,
+                        "fields": []
+                    },
+                    "version": 1,
+                    "configuration": "82d68ba2b705822e"
+                },
+                "restore": {
+                    "parameters": {
+                        "hook": {
+                            "data": {
+                                "editable": "true"
+                            },
+                            "label": "order_status_updates"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "hook",
+                        "type": "hook:gateway-webhook",
+                        "label": "Webhook",
+                        "required": true
+                    },
+                    {
+                        "name": "maxResults",
+                        "type": "number",
+                        "label": "Maximum number of results"
+                    }
+                ],
+                "interface": [
+                    {
+                        "name": "order_number",
+                        "type": "text"
+                    },
+                    {
+                        "name": "payment_method",
+                        "type": "text"
+                    },
+                    {
+                        "name": "customer_email",
+                        "type": "text"
+                    },
+                    {
+                        "name": "items",
+                        "spec": {
+                            "spec": [
+                                {
+                                    "name": "quantity",
+                                    "type": "number"
+                                },
+                                {
+                                    "name": "name",
+                                    "type": "text"
+                                },
+                                {
+                                    "name": "price",
+                                    "type": "number"
+                                }
+                            ],
+                            "type": "collection"
+                        },
+                        "type": "array"
+                    },
+                    {
+                        "name": "customer_name",
+                        "type": "text"
+                    },
+                    {
+                        "name": "event",
+                        "type": "text"
+                    },
+                    {
+                        "name": "shipping",
+                        "type": "number"
+                    },
+                    {
+                        "name": "changed_at",
+                        "type": "text"
+                    },
+                    {
+                        "name": "subtotal",
+                        "type": "number"
+                    },
+                    {
+                        "name": "previous_status",
+                        "type": "text"
+                    },
+                    {
+                        "name": "status",
+                        "type": "text"
+                    },
+                    {
+                        "name": "total",
+                        "type": "number"
+                    },
+                    {
+                        "name": "status_message",
+                        "type": "text"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 5,
+            "module": "builtin:BasicRouter",
+            "version": 1,
+            "filter": null,
+            "mapper": null,
+            "metadata": {
+                "designer": {
+                    "x": 300,
+                    "y": 0
+                }
+            },
+            "routes": [
+                {
+                    "flow": [
+                        {
+                            "id": 2,
+                            "module": "resend:sendAnEmail",
+                            "version": 1,
+                            "parameters": {
+                                "__IMTCONN__": 10757028
+                            },
+                            "filter": {
+                                "name": "KA STOK.",
+                                "conditions": [
+                                    [
+                                        {
+                                            "a": "{{1.status}}",
+                                            "o": "text:equal",
+                                            "b": "confirmed"
+                                        },
+                                        {
+                                            "a": "{{1.payment_method}}",
+                                            "o": "text:equal",
+                                            "b": "cod"
+                                        }
+                                    ]
+                                ]
+                            },
+                            "mapper": {
+                                "to": "{{1.customer_email}}",
+                                "from": "Luxury Watches <orders@luxurywatchesks.com>",
+                                "html": "<div style=\"margin:0;padding:30px 12px;background:#f4f2ee;font-family:Arial,Helvetica,sans-serif;color:#24211d;\">\r\n  <div style=\"max-width:600px;margin:0 auto;background:#fff;border:1px solid #e7e1d7;border-radius:12px;overflow:hidden;\">\r\n\r\n    <div style=\"padding:28px 24px;background:#171614;text-align:center;\">\r\n      <img\r\n        src=\"https://luxurywatchesks.com/luxury-watches-header-logo.png\"\r\n        alt=\"Luxury Watches Kosovë\"\r\n        width=\"180\"\r\n        style=\"display:block;width:180px;max-width:100%;height:auto;margin:0 auto 18px;\"\r\n      >\r\n      <p style=\"margin:0;color:#d2b77c;font-size:11px;letter-spacing:2px;text-transform:uppercase;\">\r\n        Stoku u konfirmua\r\n      </p>\r\n    </div>\r\n\r\n    <div style=\"padding:32px 28px;\">\r\n      <h1 style=\"margin:0 0 22px;color:#171614;font-size:23px;line-height:1.35;font-weight:600;text-align:center;\">\r\n        Produkti është në dispozicion\r\n      </h1>\r\n\r\n      <p style=\"margin:0 0 16px;font-size:15px;line-height:1.7;\">\r\n        Përshëndetje <strong>{{1.customer_name}}</strong>,\r\n      </p>\r\n\r\n      <p style=\"margin:0 0 22px;color:#514c45;font-size:15px;line-height:1.7;\">\r\n        Kemi konfirmuar se produkti juaj është në stok. Porosia\r\n        <strong>#{{1.order_number}}</strong> është nisur për dërgesë dhe pritet t’ju mbërrijë brenda\r\n        <strong>24–48 orëve</strong>.\r\n      </p>\r\n\r\n      <div style=\"margin:24px 0;padding:18px 20px;background:#f8f6f2;border:1px solid #eee9df;border-radius:8px;\">\r\n        <h2 style=\"margin:0 0 14px;color:#34302a;font-size:15px;font-weight:600;\">\r\n          Përmbledhja e porosisë\r\n        </h2>\r\n\r\n        <p style=\"margin:7px 0;color:#514c45;font-size:14px;line-height:1.6;\">\r\n          <strong>Numri i porosisë:</strong> #{{1.order_number}}\r\n        </p>\r\n        <p style=\"margin:7px 0;color:#514c45;font-size:14px;line-height:1.6;\">\r\n          <strong>Nëntotali:</strong> {{1.subtotal}} €\r\n        </p>\r\n        <p style=\"margin:7px 0;color:#514c45;font-size:14px;line-height:1.6;\">\r\n          <strong>Posta:</strong> {{1.shipping}} €\r\n        </p>\r\n\r\n        <div style=\"height:1px;margin:14px 0;background:#e7e1d7;\"></div>\r\n\r\n        <p style=\"margin:0;color:#171614;font-size:16px;line-height:1.6;\">\r\n          <strong>Totali për pagesë:</strong> {{1.total}} €\r\n        </p>\r\n      </div>\r\n\r\n      <div style=\"margin:22px 0;padding:16px 18px;background:#fbf8f1;border-left:3px solid #b89554;\">\r\n        <p style=\"margin:0;color:#514c45;font-size:14px;line-height:1.7;\">\r\n          Pagesa bëhet te korrieri kur t’ju dorëzohet porosia. Ju lutemi, mbani shumën e plotë gati kur t’ju kontaktojë korrieri.\r\n        </p>\r\n      </div>\r\n\r\n      <p style=\"margin:24px 0 0;color:#514c45;font-size:14px;line-height:1.7;\">\r\n        Faleminderit që zgjodhët Luxury Watches Kosovë.\r\n      </p>\r\n    </div>\r\n\r\n    <div style=\"padding:20px 24px;background:#faf9f7;border-top:1px solid #eee9df;text-align:center;\">\r\n      <p style=\"margin:0;color:#827c72;font-size:12px;line-height:1.7;\">\r\n        Me respekt,<br>\r\n        <strong style=\"color:#34302a;\">Luxury Watches Kosovë</strong><br>\r\n        <a href=\"https://luxurywatchesks.com\" style=\"color:#8b6b35;text-decoration:none;\">\r\n          luxurywatchesks.com\r\n        </a>\r\n      </p>\r\n    </div>\r\n\r\n  </div>\r\n</div>",
+                                "subject": "Përditësim për porosinë{{1.order_number}}",
+                                "sendEmailAs": "html"
+                            },
+                            "metadata": {
+                                "designer": {
+                                    "x": 600,
+                                    "y": -300
+                                },
+                                "setupValidation": {
+                                    "result": {
+                                        "valid": true,
+                                        "fields": []
+                                    },
+                                    "version": 1,
+                                    "configuration": "5cb7acbc660e3515"
+                                },
+                                "restore": {
+                                    "expect": {
+                                        "cc": {
+                                            "mode": "chose"
+                                        },
+                                        "to": {
+                                            "mode": "edit"
+                                        },
+                                        "bcc": {
+                                            "mode": "chose"
+                                        },
+                                        "tags": {
+                                            "mode": "chose"
+                                        },
+                                        "headers": {
+                                            "mode": "chose"
+                                        },
+                                        "replyTo": {
+                                            "mode": "chose"
+                                        },
+                                        "attachments": {
+                                            "mode": "chose"
+                                        },
+                                        "sendEmailAs": {
+                                            "mode": "edit"
+                                        }
+                                    },
+                                    "parameters": {
+                                        "__IMTCONN__": {
+                                            "data": {
+                                                "scoped": "true",
+                                                "connection": "resend"
+                                            },
+                                            "label": "Drenat's Resend connection"
+                                        }
+                                    }
+                                },
+                                "parameters": [
+                                    {
+                                        "name": "__IMTCONN__",
+                                        "type": "account:resend",
+                                        "label": "Connection",
+                                        "required": true
+                                    }
+                                ],
+                                "expect": [
+                                    {
+                                        "name": "from",
+                                        "type": "text",
+                                        "label": "From",
+                                        "required": true
+                                    },
+                                    {
+                                        "name": "to",
+                                        "spec": {
+                                            "name": "value",
+                                            "type": "email"
+                                        },
+                                        "type": "array",
+                                        "label": "To",
+                                        "required": true
+                                    },
+                                    {
+                                        "name": "bcc",
+                                        "spec": {
+                                            "name": "value",
+                                            "type": "email"
+                                        },
+                                        "type": "array",
+                                        "label": "BCC"
+                                    },
+                                    {
+                                        "name": "cc",
+                                        "spec": {
+                                            "name": "value",
+                                            "type": "email"
+                                        },
+                                        "type": "array",
+                                        "label": "CC"
+                                    },
+                                    {
+                                        "name": "replyTo",
+                                        "spec": {
+                                            "name": "value",
+                                            "type": "email"
+                                        },
+                                        "type": "array",
+                                        "label": "Reply-To"
+                                    },
+                                    {
+                                        "name": "subject",
+                                        "type": "text",
+                                        "label": "Subject",
+                                        "required": true
+                                    },
+                                    {
+                                        "name": "scheduled_at",
+                                        "time": true,
+                                        "type": "date",
+                                        "label": "Schedule For"
+                                    },
+                                    {
+                                        "name": "sendEmailAs",
+                                        "type": "select",
+                                        "label": "Send Email As",
+                                        "required": true,
+                                        "validate": {
+                                            "enum": [
+                                                "html",
+                                                "text"
+                                            ]
+                                        }
+                                    },
+                                    {
+                                        "name": "tags",
+                                        "spec": [
+                                            {
+                                                "name": "name",
+                                                "type": "text",
+                                                "label": "Name"
+                                            },
+                                            {
+                                                "name": "value",
+                                                "type": "text",
+                                                "label": "Value"
+                                            }
+                                        ],
+                                        "type": "array",
+                                        "label": "Tags"
+                                    },
+                                    {
+                                        "name": "attachments",
+                                        "spec": [
+                                            {
+                                                "name": "filename",
+                                                "type": "filename",
+                                                "label": "File name"
+                                            },
+                                            {
+                                                "name": "path",
+                                                "type": "text",
+                                                "label": "Path"
+                                            }
+                                        ],
+                                        "type": "array",
+                                        "label": "Attachments"
+                                    },
+                                    {
+                                        "name": "headers",
+                                        "spec": {
+                                            "name": "value",
+                                            "spec": [
+                                                {
+                                                    "name": "key",
+                                                    "type": "text",
+                                                    "label": "Key"
+                                                },
+                                                {
+                                                    "name": "value",
+                                                    "type": "text",
+                                                    "label": "Value"
+                                                }
+                                            ],
+                                            "type": "collection",
+                                            "label": "Header"
+                                        },
+                                        "type": "array",
+                                        "label": "Custom Headers"
+                                    },
+                                    {
+                                        "name": "html",
+                                        "type": "text",
+                                        "label": "HTML Content"
+                                    },
+                                    {
+                                        "name": "text",
+                                        "type": "text",
+                                        "label": "Plain Text Version"
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "flow": [
+                        {
+                            "id": 3,
+                            "module": "resend:sendAnEmail",
+                            "version": 1,
+                            "parameters": {
+                                "__IMTCONN__": 10757028
+                            },
+                            "filter": {
+                                "name": "NUK KA STOK",
+                                "conditions": [
+                                    [
+                                        {
+                                            "a": "{{1.status}}",
+                                            "b": "unavailable",
+                                            "o": "text:equal"
+                                        }
+                                    ]
+                                ]
+                            },
+                            "mapper": {
+                                "to": [
+                                    "{{1.customer_email}}"
+                                ],
+                                "from": "Luxury Watches <orders@luxurywatchesks.com>",
+                                "html": "<div style=\"margin:0;padding:30px 12px;background:#f4f2ee;font-family:Arial,Helvetica,sans-serif;color:#24211d;\">\r\n  <div style=\"max-width:600px;margin:0 auto;background:#fff;border:1px solid #e7e1d7;border-radius:12px;overflow:hidden;\">\r\n\r\n    <div style=\"padding:28px 24px;background:#171614;text-align:center;\">\r\n      <img\r\n        src=\"https://luxurywatchesks.com/luxury-watches-header-logo.png\"\r\n        alt=\"Luxury Watches Kosovë\"\r\n        width=\"180\"\r\n        style=\"display:block;width:180px;max-width:100%;height:auto;margin:0 auto 18px;\"\r\n      >\r\n\r\n      <p style=\"margin:0;color:#d2b77c;font-size:11px;letter-spacing:2px;text-transform:uppercase;\">\r\n        Njoftim për porosinë\r\n      </p>\r\n    </div>\r\n\r\n    <div style=\"padding:32px 28px;\">\r\n\r\n      <h1 style=\"margin:0 0 22px;color:#171614;font-size:24px;line-height:1.35;font-weight:600;text-align:center;\">\r\n        Porosia juaj është anuluar\r\n      </h1>\r\n\r\n      <p style=\"margin:0 0 16px;font-size:15px;line-height:1.7;\">\r\n        Përshëndetje <strong>{{1.customer_name}}</strong>,\r\n      </p>\r\n\r\n      <p style=\"margin:0 0 18px;color:#514c45;font-size:15px;line-height:1.7;\">\r\n        Pas kontrollimit të stokut, fatkeqësisht produkti që keni zgjedhur në porosinë\r\n        <strong>#{{1.order_number}}</strong> nuk është më në dispozicion.\r\n      </p>\r\n\r\n      <p style=\"margin:0 0 22px;color:#514c45;font-size:15px;line-height:1.7;\">\r\n        Për këtë arsye, porosia është anuluar. Na vjen keq për këtë situatë dhe ju falënderojmë për mirëkuptimin.\r\n      </p>\r\n\r\n      <div style=\"margin:24px 0;padding:20px;background:#f8f6f2;border:1px solid #eee9df;border-radius:8px;text-align:center;\">\r\n        <p style=\"margin:0 0 8px;color:#171614;font-size:16px;font-weight:600;\">\r\n          Mos u shqetësoni — kemi shumë modele të tjera në dispozicion.\r\n        </p>\r\n\r\n        <p style=\"margin:0;color:#6b655d;font-size:14px;line-height:1.7;\">\r\n          Mund të gjeni ora të tjera nga markat tuaja të preferuara dhe modele të ngjashme me produktin që zgjodhët.\r\n        </p>\r\n      </div>\r\n\r\n      <div style=\"text-align:center;margin:30px 0;\">\r\n        <a\r\n          href=\"https://luxurywatchesks.com\"\r\n          style=\"display:inline-block;background:#171614;color:#ffffff;text-decoration:none;padding:16px 34px;border-radius:6px;font-size:15px;font-weight:700;letter-spacing:.3px;\"\r\n        >\r\n          SHIKO MODELET E TJERA\r\n        </a>\r\n      </div>\r\n\r\n      <div style=\"margin:24px 0;padding:18px 20px;background:#fbf8f1;border-left:3px solid #b89554;\">\r\n        <p style=\"margin:0;color:#514c45;font-size:14px;line-height:1.7;\">\r\n          Nëse gjeni një model tjetër që ju pëlqen, mund ta porositni direkt nga faqja jonë dhe ne do ta kontrollojmë disponueshmërinë sa më shpejt.\r\n        </p>\r\n      </div>\r\n\r\n      <div style=\"margin:24px 0;padding:18px 20px;background:#f8f6f2;border:1px solid #eee9df;border-radius:8px;\">\r\n        <h2 style=\"margin:0 0 14px;color:#34302a;font-size:15px;font-weight:600;\">\r\n          Porosia e anuluar\r\n        </h2>\r\n\r\n        <p style=\"margin:7px 0;color:#514c45;font-size:14px;line-height:1.6;\">\r\n          <strong>Numri i porosisë:</strong> #{{1.order_number}}\r\n        </p>\r\n\r\n        <p style=\"margin:7px 0;color:#514c45;font-size:14px;line-height:1.6;\">\r\n          <strong>Totali:</strong> {{1.total}} €\r\n        </p>\r\n      </div>\r\n\r\n      <p style=\"margin:24px 0 0;color:#514c45;font-size:14px;line-height:1.7;\">\r\n        Faleminderit që zgjodhët Luxury Watches Kosovë. Shpresojmë që modeli juaj i ardhshëm të jetë vetëm një klik larg.\r\n      </p>\r\n\r\n    </div>\r\n\r\n    <div style=\"padding:20px 24px;background:#faf9f7;border-top:1px solid #eee9df;text-align:center;\">\r\n      <p style=\"margin:0;color:#827c72;font-size:12px;line-height:1.7;\">\r\n        Me respekt,<br>\r\n        <strong style=\"color:#34302a;\">Luxury Watches Kosovë</strong><br>\r\n        <a href=\"https://luxurywatchesks.com\" style=\"color:#8b6b35;text-decoration:none;\">\r\n          luxurywatchesks.com\r\n        </a>\r\n      </p>\r\n    </div>\r\n\r\n  </div>\r\n</div>",
+                                "subject": "Porosia #{{1.order_number}} është anuluar – produkti nuk është në stok",
+                                "sendEmailAs": "html"
+                            },
+                            "metadata": {
+                                "designer": {
+                                    "x": 600,
+                                    "y": 0
+                                },
+                                "setupValidation": {
+                                    "result": {
+                                        "valid": true,
+                                        "fields": []
+                                    },
+                                    "version": 1,
+                                    "configuration": "98cca7e36b047e64"
+                                },
+                                "restore": {
+                                    "expect": {
+                                        "cc": {
+                                            "mode": "chose"
+                                        },
+                                        "to": {
+                                            "mode": "chose",
+                                            "items": [
+                                                null
+                                            ]
+                                        },
+                                        "bcc": {
+                                            "mode": "chose"
+                                        },
+                                        "tags": {
+                                            "mode": "chose"
+                                        },
+                                        "headers": {
+                                            "mode": "chose"
+                                        },
+                                        "replyTo": {
+                                            "mode": "chose"
+                                        },
+                                        "attachments": {
+                                            "mode": "chose"
+                                        },
+                                        "sendEmailAs": {
+                                            "mode": "chose",
+                                            "label": "HTML"
+                                        }
+                                    },
+                                    "parameters": {
+                                        "__IMTCONN__": {
+                                            "data": {
+                                                "scoped": "true",
+                                                "connection": "resend"
+                                            },
+                                            "label": "Drenat's Resend connection"
+                                        }
+                                    }
+                                },
+                                "parameters": [
+                                    {
+                                        "name": "__IMTCONN__",
+                                        "type": "account:resend",
+                                        "label": "Connection",
+                                        "required": true
+                                    }
+                                ],
+                                "expect": [
+                                    {
+                                        "name": "from",
+                                        "type": "text",
+                                        "label": "From",
+                                        "required": true
+                                    },
+                                    {
+                                        "name": "to",
+                                        "spec": {
+                                            "name": "value",
+                                            "type": "email"
+                                        },
+                                        "type": "array",
+                                        "label": "To",
+                                        "required": true
+                                    },
+                                    {
+                                        "name": "bcc",
+                                        "spec": {
+                                            "name": "value",
+                                            "type": "email"
+                                        },
+                                        "type": "array",
+                                        "label": "BCC"
+                                    },
+                                    {
+                                        "name": "cc",
+                                        "spec": {
+                                            "name": "value",
+                                            "type": "email"
+                                        },
+                                        "type": "array",
+                                        "label": "CC"
+                                    },
+                                    {
+                                        "name": "replyTo",
+                                        "spec": {
+                                            "name": "value",
+                                            "type": "email"
+                                        },
+                                        "type": "array",
+                                        "label": "Reply-To"
+                                    },
+                                    {
+                                        "name": "subject",
+                                        "type": "text",
+                                        "label": "Subject",
+                                        "required": true
+                                    },
+                                    {
+                                        "name": "scheduled_at",
+                                        "time": true,
+                                        "type": "date",
+                                        "label": "Schedule For"
+                                    },
+                                    {
+                                        "name": "sendEmailAs",
+                                        "type": "select",
+                                        "label": "Send Email As",
+                                        "required": true,
+                                        "validate": {
+                                            "enum": [
+                                                "html",
+                                                "text"
+                                            ]
+                                        }
+                                    },
+                                    {
+                                        "name": "tags",
+                                        "spec": [
+                                            {
+                                                "name": "name",
+                                                "type": "text",
+                                                "label": "Name"
+                                            },
+                                            {
+                                                "name": "value",
+                                                "type": "text",
+                                                "label": "Value"
+                                            }
+                                        ],
+                                        "type": "array",
+                                        "label": "Tags"
+                                    },
+                                    {
+                                        "name": "attachments",
+                                        "spec": [
+                                            {
+                                                "name": "filename",
+                                                "type": "filename",
+                                                "label": "File name"
+                                            },
+                                            {
+                                                "name": "path",
+                                                "type": "text",
+                                                "label": "Path"
+                                            }
+                                        ],
+                                        "type": "array",
+                                        "label": "Attachments"
+                                    },
+                                    {
+                                        "name": "headers",
+                                        "spec": {
+                                            "name": "value",
+                                            "spec": [
+                                                {
+                                                    "name": "key",
+                                                    "type": "text",
+                                                    "label": "Key"
+                                                },
+                                                {
+                                                    "name": "value",
+                                                    "type": "text",
+                                                    "label": "Value"
+                                                }
+                                            ],
+                                            "type": "collection",
+                                            "label": "Header"
+                                        },
+                                        "type": "array",
+                                        "label": "Custom Headers"
+                                    },
+                                    {
+                                        "name": "html",
+                                        "type": "text",
+                                        "label": "HTML Content"
+                                    },
+                                    {
+                                        "name": "text",
+                                        "type": "text",
+                                        "label": "Plain Text Version"
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "flow": [
+                        {
+                            "id": 6,
+                            "module": "placeholder:Placeholder",
+                            "filter": null,
+                            "metadata": {
+                                "designer": {
+                                    "x": 375,
+                                    "y": 202
+                                }
+                            }
+                        },
+                        {
+                            "id": 8,
+                            "module": "resend:sendAnEmail",
+                            "version": 1,
+                            "filter": {
+                                "name": "PAYSERA - KA STOK",
+                                "conditions": [
+                                    [
+                                        {
+                                            "a": "{{1.status}}",
+                                            "o": "text:equal",
+                                            "b": "confirmed"
+                                        },
+                                        {
+                                            "a": "{{1.payment_method}}",
+                                            "o": "text:equal",
+                                            "b": "paysera"
+                                        }
+                                    ]
+                                ]
+                            },
+                            "metadata": {
+                                "designer": {
+                                    "x": 606,
+                                    "y": 288,
+                                    "messages": [
+                                        {
+                                            "category": "setupreq",
+                                            "severity": "error",
+                                            "message": "This module doesn't have a connection. Create a connection in the module settings to continue."
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "metadata": {
+        "instant": true,
+        "version": 1,
+        "scenario": {
+            "roundtrips": 1,
+            "maxErrors": 3,
+            "autoCommit": true,
+            "autoCommitTriggerLast": true,
+            "sequential": false,
+            "slots": null,
+            "confidential": false,
+            "dataloss": false,
+            "dlq": false,
+            "freshVariables": false
+        },
+        "designer": {
+            "orphans": []
+        },
+        "zone": "eu1.make.com",
+        "notes": []
+    }
+}

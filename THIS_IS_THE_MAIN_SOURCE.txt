@@ -1,0 +1,3 @@
+THIS IS THE CANONICAL SOURCE PROJECT.
+Start every future change from this folder.
+Do not use old PAYSERA_VERIFIED / V2 / V3 / preview folders as source.

@@ -1,0 +1,5 @@
+[functions.paysera-payment]
+verify_jwt = false
+
+[functions.paysera-callback]
+verify_jwt = false
